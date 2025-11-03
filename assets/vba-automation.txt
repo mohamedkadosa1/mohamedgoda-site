@@ -1,0 +1,42 @@
+Sub ReplyAllWithOnlyTrueAttachmentsAnd12MinDelay()
+    Dim originalMail As MailItem
+    Dim replyMail As MailItem
+    Dim attachment As attachment
+    Dim filePath As String
+    Dim tempFolder As String
+    Dim contentId As String
+
+    tempFolder = Environ("TEMP") & "\"
+
+    If Application.ActiveExplorer.selection.Count > 0 Then
+        Set originalMail = Application.ActiveExplorer.selection.Item(1)
+        Set replyMail = originalMail.ReplyAll
+
+
+        replyMail.HTMLBody = "<p><b>Confirmed</b></p>" & replyMail.HTMLBody
+
+
+        For Each attachment In originalMail.Attachments
+            On Error Resume Next
+            contentId = attachment.PropertyAccessor.GetProperty("http://schemas.microsoft.com/mapi/proptag/0x3712001E")
+            On Error GoTo 0
+
+            If Len(contentId) = 0 Then
+                filePath = tempFolder & attachment.FileName
+                attachment.SaveAsFile filePath
+                replyMail.Attachments.Add filePath
+            End If
+        Next
+
+
+        replyMail.DeferredDeliveryTime = Now + TimeValue("00:12:00")
+
+        replyMail.Display
+
+        MsgBox "تم تفعيل Delay Delivery — سيتم الإرسال بعد 12 دقيقة.", vbInformation
+
+    Else
+        MsgBox "من فضلك اختر رسالة أولاً.", vbExclamation
+    End If
+End Sub
+
