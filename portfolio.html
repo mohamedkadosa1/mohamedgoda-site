@@ -20,12 +20,34 @@
     h1, h3 { color: #00d1b2; }
     header { text-align: center; padding: 50px 20px; }
 
+    /* أزرار الفلاتر */
+    .filters {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .filters button {
+      background: #111622;
+      color: #eaeefb;
+      border: 1px solid #1e2331;
+      padding: 8px 15px;
+      margin: 5px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .filters button:hover,
+    .filters button.active {
+      background: #00d1b2;
+      color: #0b0e14;
+      font-weight: 600;
+    }
+
+    /* المشاريع */
     .projects {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 20px;
     }
-
     .project {
       background: #0b0e14;
       border: 1px solid #1e2331;
@@ -35,16 +57,13 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.2);
       transition: transform 0.3s ease;
     }
-
     .project:hover { transform: translateY(-5px); }
-
     .project img {
       width: 100%;
       border-radius: 8px;
       margin-bottom: 10px;
       transition: transform 0.4s ease;
     }
-
     .project:hover img { transform: scale(1.03); }
 
     .btn {
@@ -64,29 +83,61 @@
       margin-top: 50px;
       padding-bottom: 30px;
     }
+
+    @media (max-width: 600px) {
+      .filters button { padding: 6px 12px; font-size: 0.9rem; }
+    }
   </style>
 </head>
 <body>
   <header>
     <h1>أعمالي</h1>
-    <p>مجموعة من المشاريع والمواقع التي قمت بإنشائها وتطويرها باستخدام تقنيات الويب.</p>
+    <p>مجموعة من المشاريع والمواقع التي قمت بإنشائها وتطويرها باستخدام تقنيات الويب وأدوات Excel وVBA.</p>
     <a href="index.html" class="btn">العودة للصفحة الرئيسية</a>
   </header>
 
+  <!-- أزرار التصنيفات -->
+  <section class="filters">
+    <button class="active" data-filter="all">الكل</button>
+    <button data-filter="web">مواقع ويب</button>
+    <button data-filter="excel">Excel</button>
+    <button data-filter="vba">VBA</button>
+    <button data-filter="other">أخرى</button>
+  </section>
+
+  <!-- المشاريع -->
   <section>
     <div class="projects">
 
-      <div class="project">
+      <!-- مشروع موقع بقات -->
+      <div class="project" data-category="web">
         <img src="assets/baqat-thumbnail.jpg" alt="صورة لموقع بقّات">
         <h3>موقع بقّات | Baqat</h3>
         <p>موقع إلكتروني بسيط يعرض منتجات بطريقة جذّابة. صممته باستخدام HTML و CSS واهتممت بتجربة المستخدم والتصميم المتجاوب.</p>
         <a href="https://elhamaky01.github.io/baqat/" target="_blank" class="btn">زيارة الموقع</a>
       </div>
 
-      <div class="project">
+      <!-- مشروع Excel -->
+      <div class="project" data-category="excel">
+        <img src="assets/excel-dashboard.jpg" alt="Excel Dashboard">
+        <h3>لوحة تحكم Excel</h3>
+        <p>تصميم لوحة متابعة ذكية لتقارير التراخيص الحكومية باستخدام معادلات متقدمة ورسوم بيانية تفاعلية.</p>
+        <a href="#" class="btn">عرض قريبًا</a>
+      </div>
+
+      <!-- مشروع VBA -->
+      <div class="project" data-category="vba">
+        <img src="assets/vba-automation.jpg" alt="VBA Automation">
+        <h3>نظام أتمتة مراسلات</h3>
+        <p>برمجة ماكرو VBA يرسل الإيميلات التلقائية للجهات المختصة عند تحديث البيانات لتسريع التواصل.</p>
+        <a href="#" class="btn">عرض قريبًا</a>
+      </div>
+
+      <!-- مشروع آخر -->
+      <div class="project" data-category="other">
         <img src="assets/project-sample.jpg" alt="مشروع آخر">
-        <h3>اسم المشروع القادم</h3>
-        <p>وصف مختصر عن المشروع الجديد الذي سيتم إضافته لاحقًا.</p>
+        <h3>أداة تنظيم مهام داخلية</h3>
+        <p>أداة بسيطة تساعد في إدارة المهام اليومية ومتابعة الإنجاز.</p>
         <a href="#" class="btn">قريبًا</a>
       </div>
 
@@ -98,7 +149,27 @@
   </footer>
 
   <script>
+    // تحديث السنة
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // فلترة المشاريع
+    const filterButtons = document.querySelectorAll('.filters button');
+    const projects = document.querySelectorAll('.project');
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelector('.filters button.active').classList.remove('active');
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        projects.forEach(project => {
+          if (filter === 'all' || project.dataset.category === filter) {
+            project.style.display = 'block';
+          } else {
+            project.style.display = 'none';
+          }
+        });
+      });
+    });
   </script>
 </body>
 </html>
